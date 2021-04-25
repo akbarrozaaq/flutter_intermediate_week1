@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_intermediate_week1/views/home_movie.dart';
 import 'package:flutter_intermediate_week1/views/video_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,7 +106,7 @@ class _HomeState extends State<Home> {
                           size: 100,
                         ),
                         Text(
-                          "Aplikasi Movie\ndengan Database MySql",
+                          "Movie Kartun\nUpin & Ipin",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
@@ -118,8 +119,8 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 onTap: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => Grafik()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomeMovie()));
                 },
               ),
               TextButton(
