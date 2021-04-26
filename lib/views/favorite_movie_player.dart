@@ -5,20 +5,21 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class MoviePlayer extends StatefulWidget {
+class FavoriteMoviePlayer extends StatefulWidget {
   final String title;
   final String email;
 
-  MoviePlayer({this.title, this.email});
+  FavoriteMoviePlayer({this.title, this.email});
   @override
-  _MoviePlayerState createState() => _MoviePlayerState();
+  _FavoriteMoviePlayerState createState() => _FavoriteMoviePlayerState();
 }
 
-class _MoviePlayerState extends State<MoviePlayer> {
+class _FavoriteMoviePlayerState extends State<FavoriteMoviePlayer> {
   List<VideoModel> videoModel;
 
   Future<List<VideoModel>> getPlaylist() async {
-    final response = await http.get(Uri.parse(BaseUrl.dataVideo));
+    final response =
+        await http.get(Uri.parse(BaseUrl.dataFavoriteTampil + widget.email));
     List res = jsonDecode(response.body);
     List<VideoModel> data = [];
     for (var i = 0; i < res.length; i++) {
@@ -43,7 +44,7 @@ class _MoviePlayerState extends State<MoviePlayer> {
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
-              ? Playlist(snapshot.data, widget.email)
+              ? FavoritePlaylist(snapshot.data, widget.email)
               : Center(
                   child: CircularProgressIndicator(),
                 );
@@ -53,17 +54,17 @@ class _MoviePlayerState extends State<MoviePlayer> {
   }
 }
 
-class Playlist extends StatefulWidget {
+class FavoritePlaylist extends StatefulWidget {
   final List<VideoModel> listYt;
   final String email;
 
-  Playlist(this.listYt, this.email);
+  FavoritePlaylist(this.listYt, this.email);
 
   @override
-  _PlaylistState createState() => _PlaylistState();
+  _FavoritePlaylistState createState() => _FavoritePlaylistState();
 }
 
-class _PlaylistState extends State<Playlist> {
+class _FavoritePlaylistState extends State<FavoritePlaylist> {
 // @override
 // void initState() {
 //   _getFavorite();
@@ -85,13 +86,13 @@ class _PlaylistState extends State<Playlist> {
                   // Navigator.push(
                   //   context,
                   //   MaterialPageRoute(
-                  //       builder: (context) => ShowVideo(
+                  //       builder: (context) => FavoriteShowVideo(
                   //           "https://youtube.com/embed/${widget.listYt[index].videoId}")),
                   // );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ShowDetailVideo(
+                        builder: (context) => FavoriteShowDetailVideo(
                               judul: widget.listYt[index].videoJudul,
                               gambar: widget.listYt[index].videoGambar,
                               video: widget.listYt[index].videoId,
@@ -145,8 +146,9 @@ class _PlaylistState extends State<Playlist> {
   }
 }
 
-class ShowDetailVideo extends StatefulWidget {
-  ShowDetailVideo({this.email, this.judul, this.isi, this.gambar, this.video});
+class FavoriteShowDetailVideo extends StatefulWidget {
+  FavoriteShowDetailVideo(
+      {this.email, this.judul, this.isi, this.gambar, this.video});
   final String email;
   final String judul;
   final String isi;
@@ -154,12 +156,13 @@ class ShowDetailVideo extends StatefulWidget {
   final String video;
 
   @override
-  _ShowDetailVideoState createState() => _ShowDetailVideoState();
+  _FavoriteShowDetailVideoState createState() =>
+      _FavoriteShowDetailVideoState();
 }
 
-class _ShowDetailVideoState extends State<ShowDetailVideo> {
-  _addFavorite() async {
-    final response = await http.post(Uri.parse(BaseUrl.dataFavorite),
+class _FavoriteShowDetailVideoState extends State<FavoriteShowDetailVideo> {
+  _deleteFavorite() async {
+    final response = await http.post(Uri.parse(BaseUrl.dataFavoriteTampil),
         body: {"email": widget.email, "idvideo": widget.video});
     final data = jsonDecode(response.body);
     int value = data['value'];
@@ -209,8 +212,8 @@ class _ShowDetailVideoState extends State<ShowDetailVideo> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ShowVideo("https://youtube.com/embed/${widget.video}"),
+                  builder: (context) => FavoriteShowVideo(
+                      "https://youtube.com/embed/${widget.video}"),
                 ),
               );
             },
@@ -278,46 +281,29 @@ class _ShowDetailVideoState extends State<ShowDetailVideo> {
               style: TextStyle(fontSize: 20),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-                bottom: 16.0, right: 16.0, left: 16.0, top: 8),
-            child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    Color(0xFFFF729F),
-                  ),
-                ),
-                onPressed: () {
-                  _addFavorite();
-                },
-                child: Text("Tambahkan ke favorit")),
-          )
+          // Padding(
+          //   padding: const EdgeInsets.only(
+          //       bottom: 16.0, right: 16.0, left: 16.0, top: 8),
+          //   child: ElevatedButton(
+          //       style: ButtonStyle(
+          //         backgroundColor: MaterialStateProperty.all(
+          //           Color(0xFFFF729F),
+          //         ),
+          //       ),
+          //       onPressed: () {
+          //         _deleteFavorite();
+          //       },
+          //       child: Text("Hapus dari Favorite")),
+          // )
         ],
       ),
     );
-
-    _showMaterialDialog() {
-      showDialog(
-          context: context,
-          builder: (_) => new AlertDialog(
-                title: new Text("Material Dialog"),
-                content: new Text("Hey! I'm Coflutter!"),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Close me!'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ));
-    }
   }
 }
 
-class ShowVideo extends StatelessWidget {
+class FavoriteShowVideo extends StatelessWidget {
   final url;
-  ShowVideo(this.url);
+  FavoriteShowVideo(this.url);
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_intermediate_week1/views/favorite_movie_player.dart';
 import 'package:flutter_intermediate_week1/views/movie_player.dart';
 
 class HomeMovie extends StatelessWidget {
+  final String email;
+  HomeMovie({this.email});
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -13,7 +17,7 @@ class HomeMovie extends StatelessWidget {
           children: [
             SafeArea(
               child: Text(
-                "Aplikasi Movie dengan Database Mysql",
+                "Aplikasi Movie Upin & Ipin dengan Database Mysql",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -56,6 +60,7 @@ class HomeMovie extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => MoviePlayer(
                       title: "Semua Movie Upin & Ipin",
+                      email: email,
                     ),
                   ),
                 );
@@ -91,10 +96,14 @@ class HomeMovie extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MoviePlayer(
-                            title: "Movie Upin & Ipin yang disukai")));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavoriteMoviePlayer(
+                      title: "Movie Upin & Ipin yang disukai",
+                      email: email,
+                    ),
+                  ),
+                );
               },
             ),
           ],

@@ -119,8 +119,12 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeMovie()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeMovie(
+                                email: email,
+                              )));
                 },
               ),
               TextButton(
